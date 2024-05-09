@@ -1,21 +1,28 @@
-require('dotenv').config();
-const express = require('express');
-const compression = require('compression');
+require("dotenv").config();
+const app = require("express")();
+const compression = require("compression");
+const upload = require("multer")();
 
-const app = express();
 const PORT = 3000;
-
-// Middleware for JWT Authentication
-const authMiddleware = require('./middlewares/authMiddleware');
-const routes = require('./routes/api');
 
 // Compression middleware
 app.use(compression());
 
-// API routes
-app.use('/api', 
-// authMiddleware,
- routes);
+// Database connection
+require("./database")();
+
+// Middleware to parse multipart/form-data requests
+app.use(upload.any());
+
+// Auth routes
+app.use("/api/auth", require("./routes/auth"));
+
+// App routes with auth middleware
+app.use(
+  "/api", 
+  require("./middlewares/authMiddleware"),
+  require("./routes/app"),
+);
 
 // Start the server
 app.listen(PORT, () => {

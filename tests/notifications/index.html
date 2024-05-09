@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+  <title>Pusher Test</title>
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script>
+    var pusher = new Pusher('cb36f5cb37b0041eeddd', {
+      cluster: 'ap1'
+    });
+	
+	const userId = "663c3290e992c17b8ec6baf1";
+
+  const channel = pusher.subscribe('notifications');
+
+  // Request notification permission when the user interacts with the page
+  if ( 'serviceWorker' in navigator && 'Notification' in window ) {
+    // Register service worker
+    navigator.serviceWorker.register('./service-worker.js').then(function(registration) {
+      console.log('Service Worker registered with scope:', registration.scope);
+      window.addEventListener('load', () => { toggleNotificationPermission() });
+    }, function(err) {
+      console.error('Service Worker registration failed:', err);
+    });
+  }
+
+  channel.bind('new-notification', function(data) {
+    if ( data.data.users.includes(userId)) {
+      navigator.serviceWorker.ready.then(function(registration) {
+        registration.showNotification(data.notification.title, { body: data.notification.body });
+      });
+    }
+  });
+
+  const toggleNotificationPermission = () => {
+    Notification.requestPermission().then(function(permission) {
+      console.log('Notification permission:', permission);
+    });
+  };
+  </script>
+</head>
+<body>
+  <h1>Pusher Test</h1>
+  <p>
+    Try publishing an event to channel <code>my-channel</code>
+    with event name <code>my-event</code>.
+  </p>
+  <button onclick="toggleNotificationPermission()">Toggle Notification Permission</button>
+</body>
