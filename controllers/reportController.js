@@ -1,36 +1,47 @@
-const Report = require('../models/reportModel');
+const { validationResult } = require("express-validator");
+const Report = require("../models/reportModel");
+const response = require("../utils/response");
+const { checkId } = require("../utils/upload");
 
-exports.index = (req, res) => {
-  res.json([
-    {
-      'id': 1,
-      'timeline': {
-        'timestamp': '20240508T10:00:00Z',
-        'noise_level': 100,
-        'lat': -1.2345,
-        'lng': 3.4567,
-        'radius': 10,
-      },
-    },
-    {
-      'id': 2,
-      'timeline': {}
-    },
-  ]);
+exports.index = async (req, res) => {
+    const result = await Report.find();
+    response.success(res, response.helper.convertId(result));
 };
 
-exports.store = (req, res) => {
-  // Add new report
+exports.store = async (req, res) => {
+    // Add new report
+    const errors = validationResult(req);
+    if ( !errors.isEmpty() ) {
+        return response.error.badRequest(res, errors.array());
+    }
+
+    const { name, email, password } = req.body;
+    await Report.create({ name, email, password });
+
+    response.success(res, { message: "Successfully add new report!", data: {} });
 };
 
-exports.show = (req, res) => {
-  // Add new report
+exports.show = async (req, res) => {
+    // Find report by id
+    try {
+        const id = checkId(req.params.id);
+        const result = await Report.findOne({ _id: id });
+        return result ? response.success(res, result) : response.error.notFound(res, id);
+    } catch (_) {
+        return response.error.notFound({ res, message: _.message });
+    }
 };
 
-exports.edit = (req, res) => {
-  // Add new report
+exports.destroy = async (req, res) => {
+    // Delete a report
+    try {
+        const id = checkId(req.params.id);
+    
+        const result = await Report.findOneAndDelete({ _id: id });
+        return result ? response.success(res, result) : response.error.notFound(res, id);
+    } catch (_) {
+        return response.error.notFound(res, _.message);
+    }
 };
 
-exports.destroy = (req, res) => {
-  // Add new report
-};
+

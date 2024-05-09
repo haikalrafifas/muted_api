@@ -1,14 +1,13 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const reportSchema = new mongoose.Schema({
-    id: Number,
+const schema = new mongoose.Schema({
+    timestamp: Number,
     noise_level: Number,
     lat: Number,
     lng: Number,
     radius: Number,
-    timestamp: Date
-});
+    comment: String,
+    confidence: Number,
+}, { versionKey: false });
 
-const Report = mongoose.model('Report', reportSchema);
-
-module.exports = Report;
+module.exports = mongoose.model("Report", schema);

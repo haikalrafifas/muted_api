@@ -1,20 +1,23 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+const response = require("../utils/response");
 
 const { JWT_SECRET } = process.env;
 
 const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization;
-    if (!token) {
-        return res.status(401).json({ message: 'Unauthorized' + JWT_SECRET});
+    if ( !token ) {
+        return response.error.unauthorized(res);
     }
 
     jwt.verify(token, JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(403).json({ message: 'Forbidden' });
+        console.log(decoded);
+        if ( err ) {
+            return response.error.forbidden(res);
         }
         req.user = decoded;
-        next();
     });
+    
+    next();
 };
 
 module.exports = authMiddleware;

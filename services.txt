@@ -1,0 +1,8 @@
+API Tech Stack:
+  Language: JavaScript (nodejs@express)
+  Database: MongoDB
+
+Deployment Services:
+  API: Vercel
+  Database: Atlas
+  Notification: Pusher + cron-job.org + Native browser notification
