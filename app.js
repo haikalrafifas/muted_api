@@ -1,11 +1,23 @@
-const express = require("express");
+require('dotenv').config();
+const express = require('express');
+const compression = require('compression');
+
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+// Middleware for JWT Authentication
+const authMiddleware = require('./middlewares/authMiddleware');
+const routes = require('./routes/api');
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+// Compression middleware
+app.use(compression());
+
+// API routes
+app.use('/api', 
+// authMiddleware,
+ routes);
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
