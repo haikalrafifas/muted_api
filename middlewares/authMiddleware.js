@@ -2,10 +2,12 @@ const { verifyToken } = require("../utils/token");
 const response = require("../utils/response");
 
 const authMiddleware = (req, res, next) => {
-    const token = req.headers.authorization.substring(7);
+    let token = req.headers.authorization;
     if ( !token ) {
         return response.error.unauthorized(res);
     }
+
+    token = token.substring(7);
 
     const decoded = verifyToken(token);
 
