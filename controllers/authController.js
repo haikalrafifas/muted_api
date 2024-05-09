@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
-const { refreshToken, generateToken } = require("../utils/token");
+const { generateToken } = require("../utils/token");
 const response = require("../utils/response");
 const { checkRequiredFields } = require("../utils/upload");
 
@@ -54,13 +54,8 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.refresh = (req, res) => {
-    // Refresh token
-    const token = refreshToken(req.headers.authorization);
-    res.json({ token: token });
-};
-
-exports.test = (req, res) => {
-    const token = generateToken({ message: "hello" });
-    res.json({ token: token });
-};
+// exports.refresh = (req, res) => {
+//     // Refresh token
+//     const token = refreshToken(req.headers.authorization);
+//     res.json({ token: token });
+// };

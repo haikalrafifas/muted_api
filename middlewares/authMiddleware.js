@@ -1,22 +1,20 @@
-const jwt = require("jsonwebtoken");
+const { verifyToken } = require("../utils/token");
 const response = require("../utils/response");
 
-const { JWT_SECRET } = process.env;
-
 const authMiddleware = (req, res, next) => {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization.substring(7);
     if ( !token ) {
         return response.error.unauthorized(res);
     }
 
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-        console.log(decoded);
-        if ( err ) {
-            return response.error.forbidden(res);
-        }
-        req.user = decoded;
-    });
-    
+    const decoded = verifyToken(token);
+
+    if ( !decoded ) {
+        return response.error.forbidden(res);
+    }
+
+    req.user = decoded;
+
     next();
 };
 

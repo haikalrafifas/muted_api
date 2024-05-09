@@ -5,13 +5,11 @@ const ReportController = require("../controllers/reportController");
 const NotificationController = require("../controllers/notificationController");
 const UserController = require("../controllers/userController");
 
-const formMiddleware = require("../middlewares/formMiddleware");
-
 // Routes
 router.get("/test", AuthController.test);
 
 router.get("/reports", ReportController.index);
-router.post("/reports", formMiddleware, ReportController.store);
+router.post("/reports", ReportController.store);
 router.get("/reports/:id", ReportController.show);
 router.delete("/reports/:id", ReportController.destroy);
 
