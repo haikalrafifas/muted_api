@@ -1,13 +1,10 @@
 const router = require("express").Router();
 
-const AuthController = require("../controllers/authController");
 const ReportController = require("../controllers/reportController");
 const NotificationController = require("../controllers/notificationController");
 const UserController = require("../controllers/userController");
 
 // Routes
-router.get("/test", AuthController.test);
-
 router.get("/reports", ReportController.index);
 router.post("/reports", ReportController.store);
 router.get("/reports/:id", ReportController.show);
