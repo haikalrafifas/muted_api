@@ -20,7 +20,7 @@ app.use("/api/auth", require("./routes/auth"));
 // App routes with auth middleware
 app.use(
   "/api", 
-  require("./middlewares/authMiddleware"),
+  // require("./middlewares/authMiddleware"),
   require("./routes/app"),
 );
 
